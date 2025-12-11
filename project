@@ -1,0 +1,80 @@
+import java.util.Random;
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        int bestScoreEasy = Integer.MAX_VALUE;
+        int bestScoreMedium = Integer.MAX_VALUE;
+        int bestScoreHard = Integer.MAX_VALUE;
+        System.out.println("Welcome to the Number Guessing Game!");
+        System.out.println("I'm thinking of a number between 1 and 100.");
+        boolean playAgain = true;
+        while (playAgain) {
+            System.out.println("\nPlease select the difficulty level:");
+            System.out.println("1. Easy (10 chances)");
+            System.out.println("2. Medium (5 chances)");
+            System.out.println("3. Hard (3 chances)");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            int chances;
+            switch (choice) {
+                case 1:
+                    chances = 10;
+                    System.out.println("Great! You selected EASY mode.");
+                    break;
+                case 2:
+                    chances = 5;
+                    System.out.println("Great! You selected MEDIUM mode.");
+                    break;
+                case 3:
+                    chances = 3;
+                    System.out.println("Great! You selected HARD mode.");
+                    break;
+                default:
+                    System.out.println("Invalid choice, defaulting to MEDIUM.");
+                    chances = 5;
+            }
+            int number = random.nextInt(100) + 1;
+            int attempts = 0;
+            long startTime = System.currentTimeMillis();
+            boolean guessed = false;
+            System.out.println("Let's start the game!");
+            while (attempts < chances) {
+                System.out.print("Enter your guess: ");
+                int guess = scanner.nextInt();
+                attempts++;
+                if (guess == number) {
+                    long endTime = System.currentTimeMillis();
+                    long timeTaken = (endTime - startTime) / 1000;
+                    System.out.println("Congratulations! You guessed the number in " + attempts + " attempts.");
+                    System.out.println("Time taken: " + timeTaken + " seconds.");
+                    if (choice == 1 && attempts < bestScoreEasy) bestScoreEasy = attempts;
+                    if (choice == 2 && attempts < bestScoreMedium) bestScoreMedium = attempts;
+                    if (choice == 3 && attempts < bestScoreHard) bestScoreHard = attempts;
+                    guessed = true;
+                    break;
+                } else if (guess < number) {
+                    System.out.println("Incorrect! The number is greater than " + guess + ".");
+                } else {
+                    System.out.println("Incorrect! The number is less than " + guess + ".");
+                }
+                if (attempts == chances - 1) {
+                    System.out.println("Hint: The number is " +
+                            (number % 2 == 0 ? "even." : "odd."));
+                }
+            }
+            if (!guessed) {
+                System.out.println("\nYou ran out of attempts! The number was: " + number);
+            }
+            System.out.println("\n--- Best Scores ---");
+            System.out.println("Easy:   " + (bestScoreEasy == Integer.MAX_VALUE ? "-" : bestScoreEasy));
+            System.out.println("Medium: " + (bestScoreMedium == Integer.MAX_VALUE ? "-" : bestScoreMedium));
+            System.out.println("Hard:   " + (bestScoreHard == Integer.MAX_VALUE ? "-" : bestScoreHard));
+            System.out.print("\nDo you want to play again? (y/n): ");
+            char again = scanner.next().toLowerCase().charAt(0);
+            playAgain = (again == 'y');
+        }
+        System.out.println("Thanks for playing! Goodbye!");
+    }
+}
